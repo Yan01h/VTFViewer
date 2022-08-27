@@ -56,6 +56,9 @@ namespace VTFViewer {
         ImGui::StyleColorsDark();
         ImGuiStyle& style = ImGui::GetStyle();
         style.WindowBorderSize = 0.f;
+        style.Colors[ImGuiCol_Header] = ImVec4(0.f, 0.f, 0.f, 0.f);
+        style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.2f, 0.2f, 0.2f, 0.94f);
+        style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.25f, 0.25f, 0.25f, 0.94f);
     }
 
     MainWindow::~MainWindow()
@@ -113,6 +116,33 @@ namespace VTFViewer {
             | ImGuiWindowFlags_NoTitleBar);
         ImGui::Text("File name: %s (%iKB)", g_VTFFile.GetFileName(), g_VTFFile.GetFileSize());
         ImGui::Text("Size: %ix%i", vtfHeader.width, vtfHeader.height);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+        if (ImGui::CollapsingHeader("Properties"))
+        {
+            ImGui::Separator();
+            ImGui::BulletText("Signature: %s", vtfHeader.signature);
+            ImGui::BulletText("Version: %i.%i", vtfHeader.version[0], vtfHeader.version[1]);
+            ImGui::BulletText("Header Size: %i bytes", vtfHeader.headerSize);
+            ImGui::BulletText("Width: %ipx", vtfHeader.width);
+            ImGui::BulletText("Height: %ipx", vtfHeader.height);
+            ImGui::BulletText("Frames: %i", vtfHeader.frames);
+            ImGui::BulletText("Reflectivity: [%f | %f | %f]", vtfHeader.reflectivity[0],
+                vtfHeader.reflectivity[1], vtfHeader.reflectivity[2]);
+            ImGui::BulletText("Bumpmap Scale: %f", vtfHeader.bumpmapScale);
+            ImGui::BulletText("Image Format: %i", vtfHeader.highResImageFormat); // Todo
+            ImGui::BulletText("Mipmaps: %i", vtfHeader.mipmapCount);
+            ImGui::BulletText("Low Res Image Format: %i", vtfHeader.lowResImageFormat); // Todo
+            ImGui::BulletText("Low Res Image Width: %ipx", vtfHeader.lowResImageWidth);
+            ImGui::BulletText("Low Res Image Height: %ipx", vtfHeader.lowResImageHeight);
+            ImGui::BulletText("Depth: %ipx", vtfHeader.depth);
+            ImGui::BulletText("Resources: %i", vtfHeader.numResources);
+            if (ImGui::TreeNode("Flags"))
+            {
+                ImGui::TreePop();
+            }
+        }
+        ImGui::PopStyleVar();
 
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(style.ItemSpacing.x, style.WindowPadding.y));
         ImGui::Separator();

@@ -27,7 +27,6 @@ namespace VTFViewer {
         void Close();
         void Open(char* path);
 
-        const bool IsFileOpen() const { return m_File.is_open(); }
         const char* GetFileName() const { return m_FileName.c_str(); }
         const int GetFileSize() const { return m_FileSize; }
 
