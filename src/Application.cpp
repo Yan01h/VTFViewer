@@ -17,22 +17,27 @@
 namespace VTFViewer {
 
     Application::Application()
-        :m_Running(true)
+        :m_Running(true), m_MainWindow(nullptr)
     {
         LOG("Application constructor");
+        m_MainWindow = new MainWindow("VTF Viewer", 300, 500);
     }
 
     Application::~Application()
     {
         LOG("Application deconstructor");
+        delete m_MainWindow;
     }
 
     void Application::Run(int argc, char* argv[])
     {
-        while (m_Running)
+        while (!m_MainWindow->ShouldClose() && m_Running)
         {
             if (GetAsyncKeyState(VK_ESCAPE) & 1)
                 Shutdown();
+
+            m_MainWindow->Render();
+            m_MainWindow->PollInput();
         }
     }
 

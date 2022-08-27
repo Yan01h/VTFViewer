@@ -27,3 +27,11 @@ void TimedLog(const char* message, Args... args)
 	printf(message, args...);
 	printf("\n");
 }
+
+namespace VTFViewer {
+
+	typedef unsigned int uint;
+
+	void GLFWErrorCallback(int error, const char* description);
+
+}

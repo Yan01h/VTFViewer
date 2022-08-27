@@ -7,7 +7,7 @@ workspace "VTFViewer"
 	
 	flags { "MultiProcessorCompile" }
 
-
+include "dependencies/premake5.lua"
 	
 project "VTFViewer"
 	language "C++"
@@ -21,8 +21,15 @@ project "VTFViewer"
 		"src/**.h",
 		"src/**.cpp"
 	}
+
+	includedirs {
+		"dependencies/glfw/include",
+		"dependencies/imgui/include"
+	}
 	
 	links {
+		"GLFW",
+		"ImGui",
 		"opengl32.lib"
 	}
 	

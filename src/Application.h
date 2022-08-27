@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "MainWindow.h"
+
 namespace VTFViewer {
 
     class Application final
@@ -18,10 +20,15 @@ namespace VTFViewer {
         Application();
         ~Application();
 
+        Application(const Application&) = delete;
+        Application& operator=(Application&) = delete;
+
         void Run(int argc, char* argv[]);
         void Shutdown();
     private:
         bool m_Running;
+
+        MainWindow* m_MainWindow;
     };
 
 }
