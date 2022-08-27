@@ -38,17 +38,32 @@ namespace VTFViewer {
             m_File.close();
     }
 
+    void VTFFile::Close()
+    {
+        LOG("Closing current vtf file");
+        if (m_File.is_open())
+            m_File.close();
+
+        m_FileSize = 0;
+
+        m_FileName = "0";
+
+        ZeroMemory(&m_VTFHeader, sizeof(Valve::VTFHEADER));
+    }
+
     void VTFFile::Open(char* path)
     {
         LOG("Opening file: %s", path);
 
-        m_File.open(path, std::ifstream::ate | std::ifstream::binary);
+        m_File.open(path, std::ifstream::binary);
         if (m_File.is_open())
         {
             LOG("File opened!");
             m_FileSize = GetFileSizeFromPath(path);
 
             m_FileName = GetFileNameFromPath(path);
+
+            m_File.read((char*)&m_VTFHeader, sizeof(Valve::VTFHEADER));
         }
     }
     

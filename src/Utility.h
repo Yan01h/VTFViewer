@@ -18,6 +18,8 @@
 
 #define LOG(message, ...) TimedLog(message, __VA_ARGS__)
 
+struct GLFWwindow;
+
 template<typename... Args>
 void TimedLog(const char* message, Args... args)
 {
@@ -32,6 +34,8 @@ void TimedLog(const char* message, Args... args)
 namespace VTFViewer {
 
 	typedef unsigned int uint;
+
+	void GLFWDropCallback(GLFWwindow* window, int count, const char** paths);
 
 	void GLFWErrorCallback(int error, const char* description);
 

@@ -10,11 +10,21 @@
 
 #include "Utility.h"
 
+#include "MainWindow.h"
+
 #include <string>
 
 #include <Windows.h>
 
 namespace VTFViewer {
+
+    void GLFWDropCallback(GLFWwindow* window, int count, const char** paths)
+    {
+        if (!FileHasExtension((char*)paths[0], "vtf"))
+            MessageBoxA(NULL, "This file is not a .vtf file", "", MB_OK | MB_ICONINFORMATION);
+        else
+            g_VTFFile.Open((char*)paths[0]);
+    }
 
     void GLFWErrorCallback(int error, const char* description)
     {

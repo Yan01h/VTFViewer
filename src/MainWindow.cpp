@@ -25,6 +25,8 @@
 
 namespace VTFViewer {
 
+    VTFFile g_VTFFile;
+
     MainWindow::MainWindow(const char* title, uint width, uint height)
         :m_Window(nullptr)
     {
@@ -36,6 +38,7 @@ namespace VTFViewer {
         assert(m_Window && "Failed to create GLFW window!");
 
         glfwMakeContextCurrent(m_Window);
+        glfwSetDropCallback(m_Window, GLFWDropCallback);
         glfwSwapInterval(1);
 
         IMGUI_CHECKVERSION();
@@ -45,7 +48,7 @@ namespace VTFViewer {
         io.IniFilename = NULL;
         io.LogFilename = NULL;
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        io.Fonts->AddFontFromMemoryCompressedBase85TTF(Fonts::g_SegoeuiData, 18.f);
+        io.Fonts->AddFontFromMemoryCompressedBase85TTF(Fonts::g_SegoeuiData, 19.f);
 
         ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
         ImGui_ImplOpenGL2_Init();
@@ -68,8 +71,7 @@ namespace VTFViewer {
 
     void MainWindow::Render()
     {
-        static VTFFile vtfFile;
-        const Valve::VTFHEADER& vtfHeader = vtfFile.GetVTFHeader();
+        const Valve::VTFHEADER& vtfHeader = g_VTFFile.GetVTFHeader();
 
         ImGui_ImplOpenGL2_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -91,7 +93,11 @@ namespace VTFViewer {
                     if (!FileHasExtension(path, "vtf"))
                         MessageBoxA(NULL, "This file is not a .vtf file", "", MB_OK | MB_ICONINFORMATION);
                     else
-                        vtfFile.Open(path);
+                        g_VTFFile.Open(path);
+                }
+                if (ImGui::MenuItem("Close"))
+                {
+                    g_VTFFile.Close();
                 }
                 ImGui::EndMenu();
             }
@@ -105,7 +111,7 @@ namespace VTFViewer {
         ImGui::SetNextWindowSize(ImVec2(width, height - menuBarHeight));
         ImGui::Begin("Test", (bool*)false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
             | ImGuiWindowFlags_NoTitleBar);
-        ImGui::Text("File name: %s (%iKB)", vtfFile.GetFileName(), vtfFile.GetFileSize());
+        ImGui::Text("File name: %s (%iKB)", g_VTFFile.GetFileName(), g_VTFFile.GetFileSize());
         ImGui::Text("Size: %ix%i", vtfHeader.width, vtfHeader.height);
 
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(style.ItemSpacing.x, style.WindowPadding.y));

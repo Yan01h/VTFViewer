@@ -24,10 +24,12 @@ namespace VTFViewer {
         VTFFile();
         ~VTFFile();
 
+        void Close();
         void Open(char* path);
 
-        const int GetFileSize() const { return m_FileSize; }
+        const bool IsFileOpen() const { return m_File.is_open(); }
         const char* GetFileName() const { return m_FileName.c_str(); }
+        const int GetFileSize() const { return m_FileSize; }
 
         const Valve::VTFHEADER& GetVTFHeader() const { return m_VTFHeader; }
     private:
