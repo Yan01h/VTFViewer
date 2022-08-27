@@ -12,6 +12,7 @@
 
 #include <chrono>
 #include <cstdio>
+#include <string>
 
 #include <time.h>
 
@@ -34,4 +35,9 @@ namespace VTFViewer {
 
 	void GLFWErrorCallback(int error, const char* description);
 
+	bool FileHasExtension(char* file, const char* extension);
+
+	int GetFileSizeFromPath(char* path); // In KB
+
+	std::string GetFileNameFromPath(char* path);
 }

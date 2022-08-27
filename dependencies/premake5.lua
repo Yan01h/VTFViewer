@@ -126,3 +126,40 @@ project "ImGui"
 		
 	filter "configurations:*64"
 		architecture "x86_64"
+
+project "NFD"
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "off"
+	
+	targetdir ("../bin/%{cfg.buildcfg}/%{cfg.system}/%{cfg.architecture}")
+	objdir ("../bin/int/%{cfg.buildcfg}/%{cfg.system}/%{cfg.architecture}")
+	
+	files {
+		"nativefiledialog/include/NFD/nfd.h",
+		"nativefiledialog/src/common.h",
+		"nativefiledialog/src/nfd_common.h",
+		"nativefiledialog/src/nfd_common.c"
+	}
+	
+	filter "system:windows"
+		systemversion "latest"
+
+		files {
+			"nativefiledialog/src/nfd_win.cpp"
+		}
+		
+	filter "configurations:Debug*"
+		runtime "Debug"
+		symbols "on"
+		
+	filter "configurations:Release*"
+		runtime "Release"
+		optimize "on"
+		
+	filter "configurations:*32"
+		architecture "x86"
+		
+	filter "configurations:*64"
+		architecture "x86_64"

@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 
 namespace VTFViewer {
 
@@ -23,14 +24,18 @@ namespace VTFViewer {
         VTFFile();
         ~VTFFile();
 
-        
-        const char* GetFileName() const { return m_FileName; }
+        void Open(char* path);
+
+        const int GetFileSize() const { return m_FileSize; }
+        const char* GetFileName() const { return m_FileName.c_str(); }
 
         const Valve::VTFHEADER& GetVTFHeader() const { return m_VTFHeader; }
     private:
-        char* m_FileName;
-        
+        int m_FileSize;
+
         std::ifstream m_File;
+        std::string m_FileName;
+
         Valve::VTFHEADER m_VTFHeader;
     };
 

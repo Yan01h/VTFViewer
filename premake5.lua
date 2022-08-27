@@ -24,12 +24,14 @@ project "VTFViewer"
 
 	includedirs {
 		"dependencies/glfw/include",
-		"dependencies/imgui/include"
+		"dependencies/imgui/include",
+		"dependencies/nativefiledialog/include"
 	}
 	
 	links {
 		"GLFW",
 		"ImGui",
+		"NFD",
 		"opengl32.lib"
 	}
 	

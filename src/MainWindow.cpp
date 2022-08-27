@@ -16,10 +16,12 @@
 #include "valve/VTF.h"
 
 #include <assert.h>
+#include <Windows.h>
 #include <GLFW/glfw3.h>
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl2.h>
+#include <NFD/nfd.h>
 
 namespace VTFViewer {
 
@@ -82,7 +84,14 @@ namespace VTFViewer {
             {
                 if (ImGui::MenuItem("Open"))
                 {
-                    
+                    nfdchar_t* path = NULL;
+                    nfdresult_t result = NFD_OpenDialog("vtf", NULL, &path);
+                    if (result == NFD_ERROR)
+                        MessageBoxA(NULL, "An error has occurred!", "Error", MB_OK | MB_ICONERROR);
+                    if (!FileHasExtension(path, "vtf"))
+                        MessageBoxA(NULL, "This file is not a .vtf file", "", MB_OK | MB_ICONINFORMATION);
+                    else
+                        vtfFile.Open(path);
                 }
                 ImGui::EndMenu();
             }
@@ -96,7 +105,7 @@ namespace VTFViewer {
         ImGui::SetNextWindowSize(ImVec2(width, height - menuBarHeight));
         ImGui::Begin("Test", (bool*)false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
             | ImGuiWindowFlags_NoTitleBar);
-        ImGui::Text("File name: %s", vtfFile.GetFileName());
+        ImGui::Text("File name: %s (%iKB)", vtfFile.GetFileName(), vtfFile.GetFileSize());
         ImGui::Text("Size: %ix%i", vtfHeader.width, vtfHeader.height);
 
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(style.ItemSpacing.x, style.WindowPadding.y));
