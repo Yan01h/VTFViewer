@@ -15,6 +15,8 @@
 #include "fonts/Segoeui.h"
 #include "valve/VTF.h"
 
+#include <vector>
+
 #include <assert.h>
 #include <Windows.h>
 #include <GLFW/glfw3.h>
@@ -142,6 +144,9 @@ namespace VTFViewer {
             ImGui::BulletText("Resources: %i", vtfHeader.numResources);
             if (ImGui::TreeNode("Flags"))
             {
+                std::vector<const char*>& flagNames = GetValveVTFFlagString(vtfHeader.flags);
+                for (const char* flag : flagNames)
+                    ImGui::Text("%s", flag);
                 ImGui::TreePop();
             }
         }

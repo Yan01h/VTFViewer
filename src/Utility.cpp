@@ -11,8 +11,10 @@
 #include "Utility.h"
 
 #include "MainWindow.h"
+#include "valve/VTF.h"
 
 #include <string>
+#include <vector>
 
 #include <Windows.h>
 
@@ -128,6 +130,65 @@ namespace VTFViewer {
     {
         std::string filename(path);
         return filename.substr(filename.find_last_of("\\") + 1);
+    }
+
+    std::vector<const char*>& GetValveVTFFlagString(unsigned int flags)
+    {
+        static std::vector<const char*> flagNames;
+        flagNames.clear();
+#pragma region flagCheck
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_POINTSAMPLE)
+            flagNames.push_back("TEXTUREFLAGS_POINTSAMPLE");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_TRILINEAR)
+            flagNames.push_back("TEXTUREFLAGS_TRILINEAR");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_CLAMPS)
+            flagNames.push_back("TEXTUREFLAGS_CLAMPS");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_CLAMPT)
+            flagNames.push_back("TEXTUREFLAGS_CLAMPT");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_ANISOTROPIC)
+            flagNames.push_back("TEXTUREFLAGS_ANISOTROPIC");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_HINT_DXT5)
+            flagNames.push_back("TEXTUREFLAGS_HINT_DXT5");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_PWL_CORRECTED)
+            flagNames.push_back("TEXTUREFLAGS_PWL_CORRECTED");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_NORMAL)
+            flagNames.push_back("TEXTUREFLAGS_NORMAL");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_NOMIP)
+            flagNames.push_back("TEXTUREFLAGS_NOMIP");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_NOLOD)
+            flagNames.push_back("TEXTUREFLAGS_NOLOD");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_ALL_MIPS)
+            flagNames.push_back("TEXTUREFLAGS_ALL_MIPS");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_PROCEDURAL)
+            flagNames.push_back("TEXTUREFLAGS_PROCEDURAL");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_ONEBITALPHA)
+            flagNames.push_back("TEXTUREFLAGS_ONEBITALPHA");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_EIGHTBITALPHA)
+            flagNames.push_back("TEXTUREFLAGS_EIGHTBITALPHA");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_ENVMAP)
+            flagNames.push_back("TEXTUREFLAGS_ENVMAP");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_RENDERTARGET)
+            flagNames.push_back("TEXTUREFLAGS_RENDERTARGET");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_DEPTHRENDERTARGET)
+            flagNames.push_back("TEXTUREFLAGS_DEPTHRENDERTARGET");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_NODEBUGOVERRIDE)
+            flagNames.push_back("TEXTUREFLAGS_NODEBUGOVERRIDE");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_SINGLECOPY)
+            flagNames.push_back("TEXTUREFLAGS_SIGNLECOPY");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_PRE_SRGB)
+            flagNames.push_back("TEXTUREFLAGS_PRE_SRGB");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_NODEPTHBUFFER)
+            flagNames.push_back("TEXTUREFLAGS_NODEPTHBUFFER");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_CLAMPU)
+            flagNames.push_back("TEXTUREFLAGS_CLAMPU");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_VERTEXTEXTURE)
+            flagNames.push_back("TEXTUREFLAGS_VERTEXTEXTURE");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_SSBUMP)
+            flagNames.push_back("TEXTUREFLAGS_SSBUMP");
+        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_BORDER)
+            flagNames.push_back("TEXTUREFLAGS_BORDER");
+#pragma endregion
+        return flagNames;
     }
 
 }

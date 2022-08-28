@@ -13,6 +13,7 @@
 #include <chrono>
 #include <cstdio>
 #include <string>
+#include <vector>
 
 #include <time.h>
 
@@ -46,4 +47,6 @@ namespace VTFViewer {
 	const char* GetValveImageFormatString(unsigned int format);
 
 	std::string GetFileNameFromPath(char* path);
+
+	std::vector<const char*>& GetValveVTFFlagString(unsigned int flags);
 }
