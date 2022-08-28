@@ -64,6 +64,15 @@ namespace VTFViewer {
             m_FileName = GetFileNameFromPath(path);
 
             m_File.read((char*)&m_VTFHeader, sizeof(Valve::VTFHEADER));
+            // Version checking (Only files with version 7.3 are allowed at the moment
+            if (m_VTFHeader.version[0] != 7 || m_VTFHeader.version[1] != 3)
+            {
+                LOG("Attempted to open vtf file version %i.%i", m_VTFHeader.version[0],
+                    m_VTFHeader.version[1]);
+                Close();
+                MessageBoxA(NULL, "Only vtf file version 7.3 is allowed at the moment",
+                    "Error with vtf version", MB_OK | MB_ICONERROR);
+            }
         }
     }
     

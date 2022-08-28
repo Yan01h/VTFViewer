@@ -127,12 +127,15 @@ namespace VTFViewer {
             ImGui::BulletText("Width: %ipx", vtfHeader.width);
             ImGui::BulletText("Height: %ipx", vtfHeader.height);
             ImGui::BulletText("Frames: %i", vtfHeader.frames);
+            ImGui::BulletText("First Frame: %i", vtfHeader.firstFrame);
             ImGui::BulletText("Reflectivity: [%f | %f | %f]", vtfHeader.reflectivity[0],
                 vtfHeader.reflectivity[1], vtfHeader.reflectivity[2]);
             ImGui::BulletText("Bumpmap Scale: %f", vtfHeader.bumpmapScale);
-            ImGui::BulletText("Image Format: %i", vtfHeader.highResImageFormat); // Todo
+            ImGui::BulletText("Image Format: %s (%i)",
+                GetValveImageFormatString(vtfHeader.highResImageFormat), vtfHeader.highResImageFormat);
             ImGui::BulletText("Mipmaps: %i", vtfHeader.mipmapCount);
-            ImGui::BulletText("Low Res Image Format: %i", vtfHeader.lowResImageFormat); // Todo
+            ImGui::BulletText("Low Res Image Format: %s (%i)",
+                GetValveImageFormatString(vtfHeader.lowResImageFormat), vtfHeader.lowResImageFormat);
             ImGui::BulletText("Low Res Image Width: %ipx", vtfHeader.lowResImageWidth);
             ImGui::BulletText("Low Res Image Height: %ipx", vtfHeader.lowResImageHeight);
             ImGui::BulletText("Depth: %ipx", vtfHeader.depth);

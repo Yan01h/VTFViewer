@@ -60,6 +60,70 @@ namespace VTFViewer {
         return size.QuadPart / 1024;
     }
 
+    const char* GetValveImageFormatString(unsigned int format)
+    {
+        switch (format)
+        {
+        case -1:
+            return "IMAGE_FORMAT_NONE";
+        case 0:
+            return "IMAGE_FORMAT_RGBA8888";
+        case 1:
+            return "IMAGE_FORMAT_ABGR8888";
+        case 2:
+            return "IMAGE_FORMAT_RGB888";
+        case 3:
+            return "IMAGE_FORMAT_BGR888";
+        case 4:
+            return "IMAGE_FORMAT_RGB565";
+        case 5:
+            return "IMAGE_FORMAT_I8";
+        case 6:
+            return "IMAGE_FORMAT_IA88";
+        case 7:
+            return "IMAGE_FORMAT_P8";
+        case 8:
+            return "IMAGE_FORMAT_A8";
+        case 9:
+            return "IMAGE_FORMAT_RGB888_BLUESCREEN";
+        case 10:
+            return "IMAGE_FORMAT_BGR888_BLUESCREEN";
+        case 11:
+            return "IMAGE_FORMAT_ARGB8888";
+        case 12:
+            return "IMAGE_FORMAT_BGRA8888";
+        case 13:
+            return "IMAGE_FORMAT_DXT1";
+        case 14:
+            return "IMAGE_FORMAT_DXT3";
+        case 15:
+            return "IMAGE_FORMAT_DXT5";
+        case 16:
+            return "IMAGE_FORMAT_BGRX8888";
+        case 17:
+            return "IMAGE_FORMAT_BGR565";
+        case 18:
+            return "IMAGE_FORMAT_BGRX5551";
+        case 19:
+            return "IMAGE_FORMAT_BGRA4444";
+        case 20:
+            return "IMAGE_FORMAT_DXT1_ONEBITALPHA";
+        case 21:
+            return "IMAGE_FORMAT_BGRA5551";
+        case 22:
+            return "IMAGE_FORMAT_UV88";
+        case 23:
+            return "IMAGE_FORMAT_UVWQ8888";
+        case 24:
+            return "IMAGE_FORMAT_RGBA16161616F";
+        case 25:
+            return "IMAGE_FORMAT_RGBA16161616";
+        case 26:
+            return "IMAGE_FORMAT_UVLX8888";
+        }
+        return "0";
+    }
+
     std::string GetFileNameFromPath(char* path)
     {
         std::string filename(path);

@@ -85,6 +85,7 @@ namespace Valve {
 		TEXTUREFLAGS_UNUSED_80000000 = 0x80000000,
 	};
 
+#pragma pack(push, 1)
 	typedef struct tagVTFHEADER
 	{
 		char            signature[4];       // File signature ("VTF\0"). (or as little-endian integer, 0x00465456)
@@ -114,6 +115,7 @@ namespace Valve {
 
 		unsigned char   padding3[8];        // Necessary on certain compilers
 	} VTFHEADER;
+#pragma pack(pop)
 
 	struct ResourceEntryInfo
 	{

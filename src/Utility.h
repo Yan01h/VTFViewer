@@ -43,5 +43,7 @@ namespace VTFViewer {
 
 	int GetFileSizeFromPath(char* path); // In KB
 
+	const char* GetValveImageFormatString(unsigned int format);
+
 	std::string GetFileNameFromPath(char* path);
 }
