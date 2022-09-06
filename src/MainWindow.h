@@ -11,13 +11,12 @@
 #pragma once
 
 #include "Utility.h"
-#include "VTFFile.h"
 
 #include <GLFW/glfw3.h>
 
 namespace VTFViewer {
 
-    extern VTFFile g_VTFFile;
+    //extern VTFFile g_VTFFile;
 
     class MainWindow final
     {

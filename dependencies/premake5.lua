@@ -163,3 +163,36 @@ project "NFD"
 		
 	filter "configurations:*64"
 		architecture "x86_64"
+
+project "VTFLib"
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "off"
+	
+	targetdir ("../bin/%{cfg.buildcfg}/%{cfg.system}/%{cfg.architecture}")
+	objdir ("../bin/int/%{cfg.buildcfg}/%{cfg.system}/%{cfg.architecture}")
+	
+	files {
+		"VTFLib/include/VTFLib/HLLib.h",
+		"VTFLib/include/VTFLib/VTFLib.h",
+		"VTFLib/src/**.h",
+		"VTFLib/src/**.cpp"
+	}
+	
+	filter "system:windows"
+		systemversion "latest"
+		
+	filter "configurations:Debug*"
+		runtime "Debug"
+		symbols "on"
+		
+	filter "configurations:Release*"
+		runtime "Release"
+		optimize "on"
+		
+	filter "configurations:*32"
+		architecture "x86"
+		
+	filter "configurations:*64"
+		architecture "x86_64"
