@@ -10,8 +10,8 @@
 
 #include "Utility.h"
 
+#include "Application.h"
 #include "MainWindow.h"
-#include "valve/VTF.h"
 
 #include <string>
 #include <vector>
@@ -20,39 +20,10 @@
 
 namespace VTFViewer {
 
-    void GLFWDropCallback(GLFWwindow* window, int count, const char** paths)
+    std::string GetFileNameFromPath(char* path)
     {
-        //if (!FileHasExtension((char*)paths[0], "vtf"))
-        //    MessageBoxA(NULL, "This file is not a .vtf file", "", MB_OK | MB_ICONINFORMATION);
-        //else
-        //    g_VTFFile.Open((char*)paths[0]);
-    }
-
-    void GLFWErrorCallback(int error, const char* description)
-    {
-        LOG("[GLFW] Error %i: %s", error, description);
-    }
-
-    void LoadTexture(unsigned char* data, GLuint* texture, int width, int height)
-    {
-        GLuint gltexture;
-        glGenTextures(1, &gltexture);
-        glBindTexture(GL_TEXTURE_2D, gltexture);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        *texture = gltexture;
-    }
-
-    bool FileHasExtension(char* file, const char* extension)
-    {
-        std::string fileString(file);
-        if (fileString.substr(fileString.find_last_of(".") + 1) == extension)
-            return true;
-        else
-            return false;
+        std::string filename(path);
+        return filename.substr(filename.find_last_of("\\") + 1);
     }
 
     // Source from: https://stackoverflow.com/questions/8991192/check-the-file-size-without-opening-file-in-c
@@ -75,133 +46,116 @@ namespace VTFViewer {
         return size.QuadPart / 1024;
     }
 
-    //const char* GetValveImageFormatString(unsigned int format)
-    //{
-    //    switch (format)
-    //    {
-    //    case -1:
-    //        return "IMAGE_FORMAT_NONE";
-    //    case 0:
-    //        return "IMAGE_FORMAT_RGBA8888";
-    //    case 1:
-    //        return "IMAGE_FORMAT_ABGR8888";
-    //    case 2:
-    //        return "IMAGE_FORMAT_RGB888";
-    //    case 3:
-    //        return "IMAGE_FORMAT_BGR888";
-    //    case 4:
-    //        return "IMAGE_FORMAT_RGB565";
-    //    case 5:
-    //        return "IMAGE_FORMAT_I8";
-    //    case 6:
-    //        return "IMAGE_FORMAT_IA88";
-    //    case 7:
-    //        return "IMAGE_FORMAT_P8";
-    //    case 8:
-    //        return "IMAGE_FORMAT_A8";
-    //    case 9:
-    //        return "IMAGE_FORMAT_RGB888_BLUESCREEN";
-    //    case 10:
-    //        return "IMAGE_FORMAT_BGR888_BLUESCREEN";
-    //    case 11:
-    //        return "IMAGE_FORMAT_ARGB8888";
-    //    case 12:
-    //        return "IMAGE_FORMAT_BGRA8888";
-    //    case 13:
-    //        return "IMAGE_FORMAT_DXT1";
-    //    case 14:
-    //        return "IMAGE_FORMAT_DXT3";
-    //    case 15:
-    //        return "IMAGE_FORMAT_DXT5";
-    //    case 16:
-    //        return "IMAGE_FORMAT_BGRX8888";
-    //    case 17:
-    //        return "IMAGE_FORMAT_BGR565";
-    //    case 18:
-    //        return "IMAGE_FORMAT_BGRX5551";
-    //    case 19:
-    //        return "IMAGE_FORMAT_BGRA4444";
-    //    case 20:
-    //        return "IMAGE_FORMAT_DXT1_ONEBITALPHA";
-    //    case 21:
-    //        return "IMAGE_FORMAT_BGRA5551";
-    //    case 22:
-    //        return "IMAGE_FORMAT_UV88";
-    //    case 23:
-    //        return "IMAGE_FORMAT_UVWQ8888";
-    //    case 24:
-    //        return "IMAGE_FORMAT_RGBA16161616F";
-    //    case 25:
-    //        return "IMAGE_FORMAT_RGBA16161616";
-    //    case 26:
-    //        return "IMAGE_FORMAT_UVLX8888";
-    //    }
-    //    return "0";
-    //}
-
-    std::string GetFileNameFromPath(char* path)
-    {
-        std::string filename(path);
-        return filename.substr(filename.find_last_of("\\") + 1);
-    }
-
     std::vector<const char*>& GetValveVTFFlagString(unsigned int flags)
     {
         static std::vector<const char*> flagNames;
         flagNames.clear();
 #pragma region flagCheck
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_POINTSAMPLE)
-            flagNames.push_back("TEXTUREFLAGS_POINTSAMPLE");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_TRILINEAR)
-            flagNames.push_back("TEXTUREFLAGS_TRILINEAR");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_CLAMPS)
-            flagNames.push_back("TEXTUREFLAGS_CLAMPS");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_CLAMPT)
-            flagNames.push_back("TEXTUREFLAGS_CLAMPT");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_ANISOTROPIC)
-            flagNames.push_back("TEXTUREFLAGS_ANISOTROPIC");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_HINT_DXT5)
-            flagNames.push_back("TEXTUREFLAGS_HINT_DXT5");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_PWL_CORRECTED)
-            flagNames.push_back("TEXTUREFLAGS_PWL_CORRECTED");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_NORMAL)
-            flagNames.push_back("TEXTUREFLAGS_NORMAL");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_NOMIP)
-            flagNames.push_back("TEXTUREFLAGS_NOMIP");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_NOLOD)
-            flagNames.push_back("TEXTUREFLAGS_NOLOD");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_ALL_MIPS)
-            flagNames.push_back("TEXTUREFLAGS_ALL_MIPS");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_PROCEDURAL)
-            flagNames.push_back("TEXTUREFLAGS_PROCEDURAL");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_ONEBITALPHA)
-            flagNames.push_back("TEXTUREFLAGS_ONEBITALPHA");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_EIGHTBITALPHA)
-            flagNames.push_back("TEXTUREFLAGS_EIGHTBITALPHA");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_ENVMAP)
-            flagNames.push_back("TEXTUREFLAGS_ENVMAP");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_RENDERTARGET)
-            flagNames.push_back("TEXTUREFLAGS_RENDERTARGET");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_DEPTHRENDERTARGET)
-            flagNames.push_back("TEXTUREFLAGS_DEPTHRENDERTARGET");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_NODEBUGOVERRIDE)
-            flagNames.push_back("TEXTUREFLAGS_NODEBUGOVERRIDE");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_SINGLECOPY)
-            flagNames.push_back("TEXTUREFLAGS_SIGNLECOPY");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_PRE_SRGB)
-            flagNames.push_back("TEXTUREFLAGS_PRE_SRGB");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_NODEPTHBUFFER)
-            flagNames.push_back("TEXTUREFLAGS_NODEPTHBUFFER");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_CLAMPU)
-            flagNames.push_back("TEXTUREFLAGS_CLAMPU");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_VERTEXTEXTURE)
-            flagNames.push_back("TEXTUREFLAGS_VERTEXTEXTURE");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_SSBUMP)
-            flagNames.push_back("TEXTUREFLAGS_SSBUMP");
-        if (flags & Valve::CompiledVtfFlags::TEXTUREFLAGS_BORDER)
-            flagNames.push_back("TEXTUREFLAGS_BORDER");
+        if (flags & TEXTUREFLAGS_POINTSAMPLE)
+            flagNames.push_back("POINTSAMPLE");
+        if (flags & TEXTUREFLAGS_TRILINEAR)
+            flagNames.push_back("TRILINEAR");
+        if (flags & TEXTUREFLAGS_CLAMPS)
+            flagNames.push_back("CLAMPS");
+        if (flags & TEXTUREFLAGS_CLAMPT)
+            flagNames.push_back("CLAMPT");
+        if (flags & TEXTUREFLAGS_ANISOTROPIC)
+            flagNames.push_back("ANISOTROPIC");
+        if (flags & TEXTUREFLAGS_HINT_DXT5)
+            flagNames.push_back("HINT_DXT5");
+        if (flags & TEXTUREFLAGS_SRGB)
+            flagNames.push_back("SRGB");
+        if (flags & TEXTUREFLAGS_NORMAL)
+            flagNames.push_back("NORMAL");
+        if (flags & TEXTUREFLAGS_NOMIP)
+            flagNames.push_back("NOMIP");
+        if (flags & TEXTUREFLAGS_NOLOD)
+            flagNames.push_back("NOLOD");
+        if (flags & TEXTUREFLAGS_MINMIP)
+            flagNames.push_back("MINMIP");
+        if (flags & TEXTUREFLAGS_PROCEDURAL)
+            flagNames.push_back("PROCEDURAL");
+        if (flags & TEXTUREFLAGS_ONEBITALPHA)
+            flagNames.push_back("ONEBITALPHA");
+        if (flags & TEXTUREFLAGS_EIGHTBITALPHA)
+            flagNames.push_back("EIGHTBITALPHA");
+        if (flags & TEXTUREFLAGS_ENVMAP)
+            flagNames.push_back("ENVMAP");
+        if (flags & TEXTUREFLAGS_RENDERTARGET)
+            flagNames.push_back("RENDERTARGET");
+        if (flags & TEXTUREFLAGS_DEPTHRENDERTARGET)
+            flagNames.push_back("DEPTHRENDERTARGET");
+        if (flags & TEXTUREFLAGS_NODEBUGOVERRIDE)
+            flagNames.push_back("NODEBUGOVERRIDE");
+        if (flags & TEXTUREFLAGS_SINGLECOPY)
+            flagNames.push_back("SIGNLECOPY");
+        if (flags & TEXTUREFLAGS_UNUSED0)
+            flagNames.push_back("UNUSED0 (DEPRECATED)");
+        if (flags & TEXTUREFLAGS_UNUSED1)
+            flagNames.push_back("UNUSED1 (DEPRECATED)");
+        if (flags & TEXTUREFLAGS_UNUSED2)
+            flagNames.push_back("UNUSED2 (DEPRECATED)");
+        if (flags & TEXTUREFLAGS_UNUSED3)
+            flagNames.push_back("UNUSED3 (DEPRECATED)");
+        if (flags & TEXTUREFLAGS_NODEPTHBUFFER)
+            flagNames.push_back("NODEPTHBUFFER");
+        if (flags & TEXTUREFLAGS_UNUSED4)
+            flagNames.push_back("UNUSED4 (DEPRECATED)");
+        if (flags & TEXTUREFLAGS_CLAMPU)
+            flagNames.push_back("CLAMPU");
+        if (flags & TEXTUREFLAGS_VERTEXTEXTURE)
+            flagNames.push_back("VERTEXTEXTURE");
+        if (flags & TEXTUREFLAGS_SSBUMP)
+            flagNames.push_back("SSBUMP");
+        if (flags & TEXTUREFLAGS_UNUSED5)
+            flagNames.push_back("UNUSED5 (DEPRECATED)");
+        if (flags & TEXTUREFLAGS_BORDER)
+            flagNames.push_back("BORDER");
+        if (flags & TEXTUREFLAGS_DEPRECATED_SPECVAR_RED)
+            flagNames.push_back("SPECVAR_RED (DEPRECATED)");
+        if (flags & TEXTUREFLAGS_DEPRECATED_SPECVAR_ALPHA)
+            flagNames.push_back("SPECVAR_ALPHA (DEPRECATED)");
 #pragma endregion
         return flagNames;
+    }
+
+    void GLFWDropCallback(GLFWwindow* window, int count, const char** paths)
+    {
+        if (FileHasExtension((char*)paths[0], "vtf"))
+            Application::Get()->LoadFile((char*)paths[0]);
+        else
+            MessageBoxA(NULL, "This file is not a .vtf file", "", MB_OK | MB_ICONINFORMATION);
+    }
+
+    void GLFWErrorCallback(int error, const char* description)
+    {
+        LOG("[GLFW] Error %i: %s", error, description);
+    }
+
+    bool FileHasExtension(char* file, const char* extension)
+    {
+        std::string fileString(file);
+        if (fileString.substr(fileString.find_last_of(".") + 1) == extension)
+            return true;
+        else
+            return false;
+    }
+
+    void LoadTexture(unsigned char* data, int width, int height)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    }
+
+    void SetupTexture(unsigned int* textureID)
+    {
+        GLuint gltexture;
+        glGenTextures(1, &gltexture);
+        glBindTexture(GL_TEXTURE_2D, gltexture);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        *textureID = gltexture;
     }
 
 }

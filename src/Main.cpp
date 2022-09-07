@@ -26,8 +26,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     LOG("Starting VTFViewer...");
 
     VTFViewer::Application* mainApp = new VTFViewer::Application();
-    mainApp->Run(argc, argv);
+    mainApp->Run();
     delete mainApp;
 
     LOG("Closing VTFViewer...");
+    return 0;
 }

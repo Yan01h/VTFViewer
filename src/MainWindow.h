@@ -16,12 +16,10 @@
 
 namespace VTFViewer {
 
-    //extern VTFFile g_VTFFile;
-
     class MainWindow final
     {
     public:
-        MainWindow(const char* title, uint width, uint height);
+        MainWindow(const char* title, unsigned int width, unsigned int height);
         ~MainWindow();
 
         void Render();

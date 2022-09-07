@@ -19,8 +19,6 @@
 
 #define LOG(message, ...) TimedLog(message, __VA_ARGS__)
 
-typedef unsigned int GLuint;
-
 struct GLFWwindow;
 
 template<typename... Args>
@@ -36,21 +34,20 @@ void TimedLog(const char* message, Args... args)
 
 namespace VTFViewer {
 
-	typedef unsigned int uint;
+	std::string GetFileNameFromPath(char* path);
+
+	int GetFileSizeFromPath(char* path);
+
+	std::vector<const char*>& GetValveVTFFlagString(unsigned int flags);
 
 	void GLFWDropCallback(GLFWwindow* window, int count, const char** paths);
 
 	void GLFWErrorCallback(int error, const char* description);
 
-	void LoadTexture(unsigned char* data, GLuint* texture, int width, int height);
-
 	bool FileHasExtension(char* file, const char* extension);
 
-	int GetFileSizeFromPath(char* path); // In KB
+	void LoadTexture(unsigned char* data, int width, int height);
 
-	//const char* GetValveImageFormatString(unsigned int format);
+	void SetupTexture(unsigned int* textureID);
 
-	std::string GetFileNameFromPath(char* path);
-
-	std::vector<const char*>& GetValveVTFFlagString(unsigned int flags);
 }

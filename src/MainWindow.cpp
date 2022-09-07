@@ -10,10 +10,9 @@
 
 #include "MainWindow.h"
 
+#include "Application.h"
 #include "Utility.h"
-#include "VTFFile.h"
 #include "fonts/Segoeui.h"
-//#include "valve/VTF.h"
 
 #include <vector>
 
@@ -28,9 +27,7 @@
 
 namespace VTFViewer {
 
-    VTFFile g_VTFFile;
-
-    MainWindow::MainWindow(const char* title, uint width, uint height)
+    MainWindow::MainWindow(const char* title, unsigned int width, unsigned int height)
         :m_Window(nullptr)
     {
         LOG("MainWindow constructor");
@@ -77,8 +74,7 @@ namespace VTFViewer {
 
     void MainWindow::Render()
     {
-        //const Valve::VTFHEADER& vtfHeader = g_VTFFile.GetVTFHeader();
-        static VTFLib::CVTFFile vtfFile;
+        static const VTFLib::CVTFFile& vtfFile = Application::Get()->GetCurrentFile();
 
         ImGui_ImplOpenGL2_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -100,8 +96,11 @@ namespace VTFViewer {
                     if (!FileHasExtension(path, "vtf"))
                         MessageBoxA(NULL, "This file is not a .vtf file", "", MB_OK | MB_ICONINFORMATION);
                     else
-                        vtfFile.Load(path, false);
-                        //g_VTFFile.Open(path);
+                        Application::Get()->LoadFile(path);
+                }
+                if (ImGui::MenuItem("Close"))
+                {
+                    Application::Get()->CloseFile();
                 }
                 ImGui::EndMenu();
             }
@@ -115,16 +114,15 @@ namespace VTFViewer {
         ImGui::SetNextWindowSize(ImVec2(width, height - menuBarHeight));
         ImGui::Begin("Test", (bool*)false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
             | ImGuiWindowFlags_NoTitleBar);
-        ImGui::Text("File name: %s (%iKB)", "Test", vtfFile.GetSize() / 1024);
+        ImGui::Text("File name: %s (%iKB)", Application::Get()->GetCurrentFileName(),
+            vtfFile.GetSize() / 1024);
         ImGui::Text("Size: %ix%i", vtfFile.GetWidth(), vtfFile.GetHeight());
 
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
         if (ImGui::CollapsingHeader("Properties"))
         {
             ImGui::Separator();
-            //ImGui::BulletText("Signature: %s", vtfFile.);
             ImGui::BulletText("Version: %i.%i", vtfFile.GetMajorVersion(), vtfFile.GetMinorVersion());
-            //ImGui::BulletText("Header Size: %i bytes", vtfFile.GetSize());
             ImGui::BulletText("Width: %ipx", vtfFile.GetWidth());
             ImGui::BulletText("Height: %ipx", vtfFile.GetHeight());
             ImGui::BulletText("Frames: %i", vtfFile.GetFrameCount());
@@ -134,19 +132,24 @@ namespace VTFViewer {
             vtfFile.GetReflectivity(rR, rG, rB);
             ImGui::BulletText("Reflectivity: [%f | %f | %f]", rR, rG, rB);
             ImGui::BulletText("Bumpmap Scale: %f", vtfFile.GetBumpmapScale());
-            ImGui::BulletText("Image Format: %s (%i)",
-                vtfFile.GetImageFormatInfo(vtfFile.GetFormat()).lpName, vtfFile.GetFormat());
+            if (vtfFile.IsLoaded())
+                ImGui::BulletText("Image Format: %s (%i)",
+                    vtfFile.GetImageFormatInfo(vtfFile.GetFormat()).lpName, vtfFile.GetFormat());
+            else
+                ImGui::BulletText("Image Format: 0 (0)");
             ImGui::BulletText("Mipmaps: %i", vtfFile.GetMipmapCount());
-            ImGui::BulletText("Thumbnail Image Format: %s (%i)",
-                vtfFile.GetImageFormatInfo(vtfFile.GetThumbnailFormat()).lpName, vtfFile.GetThumbnailFormat());
+            if (vtfFile.IsLoaded())
+                ImGui::BulletText("Thumbnail Image Format: %s (%i)",
+                    vtfFile.GetImageFormatInfo(vtfFile.GetThumbnailFormat()).lpName, vtfFile.GetThumbnailFormat());
+            else
+                ImGui::BulletText("Thumbnail Image Format: 0 (0)");
             ImGui::BulletText("Thumbnail Image Width: %ipx", vtfFile.GetThumbnailWidth());
             ImGui::BulletText("Thumbnail Image Height: %ipx", vtfFile.GetThumbnailHeight());
             ImGui::BulletText("Depth: %ipx", vtfFile.GetDepth());
             ImGui::BulletText("Resources: %i", vtfFile.GetResourceCount());
             if (ImGui::TreeNode("Flags"))
             {
-                std::vector<const char*>& flagNames = GetValveVTFFlagString(vtfFile.GetFlags());
-                for (const char* flag : flagNames)
+                for (const char* flag : Application::Get()->GetCurrentFlagStrings())
                     ImGui::Text("%s", flag);
                 ImGui::TreePop();
             }
@@ -170,14 +173,8 @@ namespace VTFViewer {
         }
         else
         {
-            vlByte* dest = new vlByte[VTFLib::CVTFFile::ComputeImageSize(vtfFile.GetWidth(),
-                vtfFile.GetHeight(), 1, IMAGE_FORMAT_RGBA8888)];
-            VTFLib::CVTFFile::ConvertToRGBA8888(vtfFile.GetData(0, 0, 0, 0), dest, vtfFile.GetWidth(),
-                vtfFile.GetHeight(), vtfFile.GetFormat());
-            GLuint tex;
-            LoadTexture(dest, &tex, vtfFile.GetWidth(), vtfFile.GetHeight());
-            ImGui::Image((void*)(intptr_t)tex, ImVec2(vtfFile.GetWidth() / 2, vtfFile.GetHeight() / 2));
-            delete[] dest;
+            ImGui::Image((void*)(intptr_t)Application::Get()->GetCurrentTextureID(),
+                ImVec2(vtfFile.GetWidth() / 2, vtfFile.GetHeight() / 2));
         }
 
         ImGui::EndChild();
