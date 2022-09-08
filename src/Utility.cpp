@@ -46,7 +46,7 @@ namespace VTFViewer {
         return size.QuadPart / 1024;
     }
 
-    std::vector<const char*>& GetValveVTFFlagString(unsigned int flags)
+    std::vector<const char*>& GetValveVTFFlagStrings(unsigned int flags)
     {
         static std::vector<const char*> flagNames;
         flagNames.clear();
@@ -122,7 +122,7 @@ namespace VTFViewer {
     void GLFWDropCallback(GLFWwindow* window, int count, const char** paths)
     {
         if (FileHasExtension((char*)paths[0], "vtf"))
-            Application::Get()->LoadFile((char*)paths[0]);
+            Application::Get()->GetCurrentVTFFile().OpenFromDisk((char*)paths[0]);
         else
             MessageBoxA(NULL, "This file is not a .vtf file", "", MB_OK | MB_ICONINFORMATION);
     }

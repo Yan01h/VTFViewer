@@ -38,7 +38,7 @@ namespace VTFViewer {
 
 	int GetFileSizeFromPath(char* path);
 
-	std::vector<const char*>& GetValveVTFFlagString(unsigned int flags);
+	std::vector<const char*>& GetValveVTFFlagStrings(unsigned int flags);
 
 	void GLFWDropCallback(GLFWwindow* window, int count, const char** paths);
 
