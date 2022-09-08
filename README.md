@@ -7,7 +7,7 @@ A small and lightweight program to quickly open and inspect .VTF files.
 
 ## Screenshots
 
-![Screenshot1](screenshots/Screenshot1.jpg) ![Screenshot2](screenshots/Screenshot2.jpg) 
+![Screenshot2](screenshots/Screenshot2.JPG) ![Screenshot1](screenshots/Screenshot1.JPG)
 
 ## How to use
 
@@ -31,3 +31,8 @@ Clone the repository and execute premake in the root folder.
 [Dear ImGui](https://github.com/ocornut/imgui)  
 [nativefiledialog](https://github.com/mlabbe/nativefiledialog)  
 [VTFLib](https://github.com/NeilJed/VTFLib)
+
+## License
+
+This project is licensed under the GNU GENERAL PUBLIC LICENSE v3.0!  
+See [LICENSE](LICENSE) for more info.
