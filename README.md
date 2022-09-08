@@ -1,9 +1,13 @@
-# VTFViewer ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Yan01h/VTFViewer?color=green&label=version)
+# VTFViewer ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Yan01h/VTFViewer?label=version)
 ![](https://img.shields.io/badge/os-Windows10-green) ![](https://img.shields.io/badge/platform-x32%20%7C%20x64-informational)
 
 A small and lightweight program to quickly open and inspect .VTF files.  
    
 **This program was made for inspecting .vtf files, not editing them!**
+
+## Screenshots
+
+![Screenshot1](screenshots/Screenshot1.jpg) ![Screenshot2](screenshots/Screenshot2.jpg) 
 
 ## How to use
 
