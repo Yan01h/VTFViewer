@@ -1,19 +1,13 @@
-// Segoeui.h
-/*
-                     GNU GENERAL PUBLIC LICENSE
-                       Version 3, 29 June 2007
- Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
- Everyone is permitted to copy and distribute verbatim copies
- of this license document, but changing it is not allowed.
- ...
-*/
+// segoui.h
+
+// Copyright (c) 2023 Yan01h
+// GPL-3.0 license
 
 #pragma once
 
-namespace VTFViewer {
-    namespace Fonts {
+namespace fonts
+{
 
-        extern const char g_SegoeuiData[883035 + 1];
+extern const char segoeuiData[883035 + 1];
 
-    }
 }

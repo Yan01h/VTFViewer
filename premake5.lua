@@ -1,66 +1,112 @@
-workspace "VTFViewer"
-	startproject "VTFViewer"
-	
+root_path = tostring(os.getcwd())
+build_path = root_path.."/build"
+bin_path = root_path.."/bin/%{cfg.system}-%{cfg.buildcfg}%{cfg.platform}"
+
+workspace "vtf_viewer"
+	startproject "vtf_viewer"
+	location (build_path)
+
 	configurations {
-		"Debug32", "Debug64", "Release32", "Release64"
-	}
-	
-	flags { "MultiProcessorCompile" }
-
-include "dependencies/premake5.lua"
-	
-project "VTFViewer"
-	language "C++"
-	cppdialect "C++17"
-	staticruntime "off"
-	
-	targetdir ("bin/%{cfg.buildcfg}/%{cfg.system}/%{cfg.architecture}")
-	objdir ("bin/int/%{cfg.buildcfg}/%{cfg.system}/%{cfg.architecture}")
-	
-	files {
-		"src/**.h",
-		"src/**.cpp"
+		"Debug",
+		"Release"
 	}
 
-	includedirs {
-		"dependencies/glfw/include",
-		"dependencies/imgui/include",
-		"dependencies/nativefiledialog/include",
-		"dependencies/VTFLib/include"
+	flags {
+		"MultiProcessorCompile"
 	}
-	
-	links {
-		"GLFW",
-		"ImGui",
-		"NFD",
-		"VTFLib",
-		"opengl32.lib"
-	}
-	
+
 	filter "system:windows"
 		systemversion "latest"
-		defines { "_WINDOWS" }
-	
-	filter "system:linux"
-		defines { "_LINUX" }
-		
+		platforms {
+			"x86",
+			"x64"
+		}
+		defines {
+			"VTFV_WINDOWS"
+		}
+
 	filter "system:macosx"
-		defines { "_MACOS" }
-		
-	filter "configurations:Debug*"
-		kind "ConsoleApp"
-		runtime "Debug"
-		symbols "on"
-		defines { "_DEBUG" }
-		
-	filter "configurations:Release*"
-		kind "WindowedApp"
-		runtime "Release"
-		optimize "on"
-		defines { "_RELEASE" }
-		
-	filter "configurations:*32"
+		defines {
+			"VTFV_MACOS"
+		}
+
+	filter "system:linux"
+		defines {
+			"VTFV_LINUX"
+		}
+
+	filter "platforms:x86"
 		architecture "x86"
-		
-	filter "configurations:*64"
+
+	filter "platforms:x64"
 		architecture "x86_64"
+
+	filter "configurations:Debug"
+		symbols "On"
+		optimize "Off"
+		runtime "Debug"
+		defines {
+			"VTFV_DEBUG"
+		}
+
+	filter "configurations:Release"
+		symbols "Off"
+		optimize "Size"
+		runtime "Release"
+		defines {
+			"VTFV_RELEASE"
+		}
+
+	include "thirdparties/glfw"
+	include "thirdparties/imgui"
+	include "thirdparties/vtflib"
+
+	project "vtf_viewer"
+		targetname "VTFViewer"
+		language "C++"
+		cppdialect "C++17"
+		location (build_path)
+
+		targetdir (bin_path)
+		objdir (bin_path.."/obj")
+
+		includedirs {
+			"src",
+			"thirdparties/glfw/include",
+			"thirdparties/imgui/include",
+			"thirdparties/vtflib/include"
+		}
+
+		files {
+			"src/core/*.h",
+			"src/core/*.cpp",
+			"src/debug/*.h",
+			"src/debug/*.cpp",
+			"src/fonts/*.h",
+			"src/fonts/*.cpp"
+		}
+
+		links {
+			"glfw",
+			"imgui",
+			"vtflib",
+			"opengl32.lib"
+		}
+
+		filter "system:windows"
+			files {
+				"src/win32/*.h",
+				"src/win32/*.cpp",
+				"src/win32/*.rc",
+				"src/win32/*.ico",
+			}
+			defines {
+				"NOMINMAX"
+			}
+
+		filter "configurations:Debug"
+			kind "ConsoleApp"
+			debugdir (root_path)
+			
+		filter "configurations:Release"
+			kind "WindowedApp"
